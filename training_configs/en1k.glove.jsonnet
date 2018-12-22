@@ -50,6 +50,7 @@
                 "tokens": {
                     "type": "embedding",
                     "embedding_dim": 100,
+                    "pretrained_file": "data/glove/glove.6B/glove.6B.100d.txt",
                     "trainable": true
                 },
             "token_characters": {

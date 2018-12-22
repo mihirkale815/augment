@@ -17,7 +17,7 @@
     },
     "iterator": {
         "type": "basic",
-        "batch_size":32
+        "batch_size":4
     },
     "validation_iterator": {
         "type": "bucket",
@@ -39,7 +39,7 @@
             "bidirectional": true,
             "dropout": 0.5,
             "hidden_size": 100,
-            "input_size": 100 + 64,
+            "input_size": 100 + 64 ,
             "num_layers": 1
         },
         "include_start_end_transitions": false,
@@ -52,7 +52,7 @@
                     "embedding_dim": 100,
                     "trainable": true
                 },
-            "token_characters": {
+                "token_characters": {
                     "type": "character_encoding",
                     "embedding": {
                         "embedding_dim": 16
@@ -67,7 +67,6 @@
                         "num_filters": 64
                     }
                 }
-
             }
         }
     },
@@ -78,13 +77,13 @@
     "trainer": {
         "cuda_device": -1,
         "grad_norm": 5,
-        "num_epochs": 30,
+        "num_epochs": 100,
         "num_serialized_models_to_keep": 1,
         "optimizer": {
             "type": "adam",
             "lr": 0.001
         },
-        "patience": 5,
+        "patience": 100,
         "validation_metric": "+f1-measure-overall"
     },
     "validation_dataset_reader": {

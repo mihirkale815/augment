@@ -39,7 +39,7 @@
             "bidirectional": true,
             "dropout": 0.5,
             "hidden_size": 100,
-            "input_size": 100 + 64,
+            "input_size": 100 + 64 ,
             "num_layers": 1
         },
         "include_start_end_transitions": false,
@@ -52,7 +52,7 @@
                     "embedding_dim": 100,
                     "trainable": true
                 },
-            "token_characters": {
+                "token_characters": {
                     "type": "character_encoding",
                     "embedding": {
                         "embedding_dim": 16
@@ -67,7 +67,6 @@
                         "num_filters": 64
                     }
                 }
-
             }
         }
     },

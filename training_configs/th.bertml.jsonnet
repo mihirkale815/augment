@@ -5,13 +5,11 @@
             "token_characters": {
                 "type": "characters"
             },
-            "tokens": {
-                "type": "single_id",
-                "lowercase_tokens": true
-            },
-            "ft_tokens": {
-                "type": "single_id",
-                "lowercase_tokens": true
+            "bert": {
+                "type":"bert-pretrained",
+                "do_lowercase": true,
+                "use_starting_offsets":true,
+                "pretrained_model":"bert-base-multilingual-cased",
             }
         }
     },
@@ -39,19 +37,22 @@
             "bidirectional": true,
             "dropout": 0.5,
             "hidden_size": 100,
-            "input_size": 100 + 64,
+            "input_size": 768 + 64,
             "num_layers": 1
         },
         "include_start_end_transitions": false,
         "label_encoding": "BIO",
         "text_field_embedder": {
-            "type": "basic",
-            "token_embedders": {
-                "tokens": {
-                    "type": "embedding",
-                    "embedding_dim": 100,
-                    "trainable": true
-                },
+            "embedder_to_indexer_map": {
+                "token_characters": ["token_characters"],  // etc
+                "bert": ["bert", "bert-offsets"]
+            },
+            "allow_unmatched_keys" : true,
+            "bert" : {
+                "type": "bert-pretrained",
+                "pretrained_model":"bert-base-multilingual-cased",
+                "requires_grad":false,
+            },
             "token_characters": {
                     "type": "character_encoding",
                     "embedding": {
@@ -69,8 +70,7 @@
                 }
 
             }
-        }
-    },
+        },
     "train_data_path": std.extVar('TRAIN_DATA_PATH'),
     "validation_data_path": std.extVar('DEV_DATA_PATH'),
     "test_data_path": std.extVar('TEST_DATA_PATH'),
@@ -82,7 +82,7 @@
         "num_serialized_models_to_keep": 1,
         "optimizer": {
             "type": "adam",
-            "lr": 0.001
+            "lr": 0.001,
         },
         "patience": 5,
         "validation_metric": "+f1-measure-overall"
@@ -94,13 +94,11 @@
             "token_characters": {
                 "type": "characters"
             },
-            "tokens": {
-                "type": "single_id",
-                "lowercase_tokens": true
-            },
-            "ft_tokens": {
-                "type": "single_id",
-                "lowercase_tokens": true
+            "bert": {
+                "type":"bert-pretrained",
+                "do_lowercase": true,
+                "use_starting_offsets":true,
+                "pretrained_model":"bert-base-multilingual-cased",
             }
         }
     }
