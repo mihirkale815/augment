@@ -8,10 +8,6 @@
             "tokens": {
                 "type": "single_id",
                 "lowercase_tokens": true
-            },
-            "ft_tokens": {
-                "type": "single_id",
-                "lowercase_tokens": true
             }
         }
     },
@@ -76,7 +72,7 @@
     "test_data_path": std.extVar('TEST_DATA_PATH'),
     "evaluate_on_test" : true,
     "trainer": {
-        "cuda_device": -1,
+        "cuda_device": 0,
         "grad_norm": 5,
         "num_epochs": 30,
         "num_serialized_models_to_keep": 1,
@@ -95,10 +91,6 @@
                 "type": "characters"
             },
             "tokens": {
-                "type": "single_id",
-                "lowercase_tokens": true
-            },
-            "ft_tokens": {
                 "type": "single_id",
                 "lowercase_tokens": true
             }

@@ -1,6 +1,6 @@
 {
     "dataset_reader": {
-        "type": "fb_xling",
+        "type": "conll2003",
         "token_indexers": {
             "token_characters": {
                 "type": "characters"
@@ -13,17 +13,11 @@
     },
     "iterator": {
         "type": "basic",
-        "batch_size":32
+        "batch_size": 8
     },
     "validation_iterator": {
-        "type": "bucket",
-        "sorting_keys": [
-            [
-                "tokens",
-                "num_tokens"
-            ]
-        ],
-        "batch_size":32
+        "type": "basic",
+        "batch_size": 128
     },
     "model": {
         "type": "crf_tagger",
@@ -34,21 +28,22 @@
             "type": "lstm",
             "bidirectional": true,
             "dropout": 0.5,
-            "hidden_size": 100,
-            "input_size": 100 + 64,
+            "hidden_size": 200,
+            "input_size": 300 + 128 ,
             "num_layers": 1
         },
         "include_start_end_transitions": false,
-        "label_encoding": "BIO",
+        "label_encoding": "IOB1",
         "text_field_embedder": {
             "type": "basic",
             "token_embedders": {
                 "tokens": {
                     "type": "embedding",
-                    "embedding_dim": 100,
-                    "trainable": true
+                    "embedding_dim": 300,
+                    "pretrained_file": "/Users/mihirkale.s/Downloads/fasttext/wiki.multi.vec",
+                    "trainable": false
                 },
-            "token_characters": {
+                "token_characters": {
                     "type": "character_encoding",
                     "embedding": {
                         "embedding_dim": 16
@@ -60,32 +55,30 @@
                         "ngram_filter_sizes": [
                             3
                         ],
-                        "num_filters": 64
+                        "num_filters": 128
                     }
                 }
-
             }
         }
     },
-    "train_data_path": std.extVar('TRAIN_DATA_PATH'),
-    "validation_data_path": std.extVar('DEV_DATA_PATH'),
-    "test_data_path": std.extVar('TEST_DATA_PATH'),
-    "evaluate_on_test" : true,
+    "train_data_path": std.extVar('NER_TRAIN_DATA_PATH'),
+    "validation_data_path": std.extVar('NER_TEST_A_DATA_PATH'),
+    "test_data_path": std.extVar('NER_TEST_B_DATA_PATH'),
     "trainer": {
         "cuda_device": -1,
         "grad_norm": 5,
-        "num_epochs": 30,
-        "num_serialized_models_to_keep": 1,
+        "num_epochs": 25,
+        "num_serialized_models_to_keep": 3,
         "optimizer": {
             "type": "adam",
             "lr": 0.001
         },
-        "patience": 5,
+        "patience": 25,
         "validation_metric": "+f1-measure-overall"
     },
     "validation_dataset_reader": {
-        "type": "fb_xling",
-        "coding_scheme": "BIO",
+        "type": "conll2003",
+        "coding_scheme": "IOB1",
         "token_indexers": {
             "token_characters": {
                 "type": "characters"
@@ -93,7 +86,7 @@
             "tokens": {
                 "type": "single_id",
                 "lowercase_tokens": true
-            },
+            }
         }
     }
 }

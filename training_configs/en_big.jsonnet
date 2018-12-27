@@ -8,7 +8,8 @@
             "tokens": {
                 "type": "single_id",
                 "lowercase_tokens": true
-            }
+            },
+
         }
     },
     "iterator": {
@@ -36,7 +37,7 @@
             "dropout": 0.5,
             "hidden_size": 100,
             "input_size": 100 + 64,
-            "num_layers": 1
+            "num_layers": 2
         },
         "include_start_end_transitions": false,
         "label_encoding": "BIO",
@@ -94,6 +95,7 @@
                 "type": "single_id",
                 "lowercase_tokens": true
             },
+
         }
     }
 }

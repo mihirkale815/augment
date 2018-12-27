@@ -55,7 +55,8 @@ class FacebookCrossLingualDialogueReader(DatasetReader):
                  feature_labels: Sequence[str] = (),
                  lazy: bool = False,
                  coding_scheme: str = "BIO",
-                 label_namespace: str = "labels") -> None:
+                 label_namespace: str = "labels",
+                 domain_identifier: str = None) -> None:
         super().__init__(lazy)
         self._token_indexers = token_indexers or {'tokens': SingleIdTokenIndexer()}
         if tag_label is not None and tag_label not in self._VALID_LABELS:
@@ -71,29 +72,41 @@ class FacebookCrossLingualDialogueReader(DatasetReader):
         self.coding_scheme = coding_scheme
         self.label_namespace = label_namespace
         self._original_coding_scheme = "BIO"
+        self.domain_identifier = domain_identifier
 
     @overrides
     def _read(self, file_path: str) -> Iterable[Instance]:
         # if `file_path` is a URL, redirect to the cache
         file_path = cached_path(file_path)
-
+        num_yielded = 0
+        counter = 0
         with open(file_path, "r") as data_file: #encoding='ISO-8859-1'
             logger.info("Reading instances from lines in file at: %s", file_path)
+            if self.domain_identifier is not None:
+                logger.info("Filtering to only include instances containing the %s domain", self.domain_identifier.upper())
             # Group into alternative divider / sentence chunks.
             for is_divider, lines in itertools.groupby(data_file, _is_divider):
                 # Ignore the divider chunks, so that `lines` corresponds to the words
                 # of a single sentence.
                 if not is_divider:
+                    counter+=1
                     fields = [line.strip().split("\t") for line in lines]
                     # unzipping trick returns tuples, but our Fields need lists
                     fields = [list(field) for field in zip(*fields)]
                     indices,tokens_,domain_intent,ner_tags = fields
+                    domain,intent = domain_intent[0].strip(" ").split("/")
+                    if self.domain_identifier is not None and self.domain_identifier != domain:
+                        continue
                     ner_tags = [tag if tag!='NoLabel' else 'O' for tag in ner_tags ]
                     #instance = CustomInstance.from_lines([line for line in lines])
                     #ner_tags = instance.slot_labels
                     #tokens_ = instance.tokens
                     tokens = [Token(token.lower()) for token in tokens_]
+                    num_yielded += 1
                     yield self.text_to_instance(tokens,ner_tags)
+        print("num yielded = ",counter,num_yielded)
+        #exit(-1)
+
 
     def text_to_instance(self, # type: ignore
                          tokens: List[Token],

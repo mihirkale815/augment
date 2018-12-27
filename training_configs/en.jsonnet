@@ -9,10 +9,7 @@
                 "type": "single_id",
                 "lowercase_tokens": true
             },
-            "ft_tokens": {
-                "type": "single_id",
-                "lowercase_tokens": true
-            }
+
         }
     },
     "iterator": {
@@ -98,10 +95,7 @@
                 "type": "single_id",
                 "lowercase_tokens": true
             },
-            "ft_tokens": {
-                "type": "single_id",
-                "lowercase_tokens": true
-            }
+
         }
     }
 }

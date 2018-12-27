@@ -1,0 +1,4 @@
+alias allennlp='python -m allennlp.run'
+allennlp evaluate --weights-file saved_models/en.bertml.es/best.th --include-package augment.dataset_readers saved_models/en.bertml.es data/multilingual_task_oriented_dialog_slotfilling/es/test-th.conllu
+
+allennlp evaluate --weights-file saved_models/en.ner.conll2003.bert --include-package augment.dataset_readers saved_models/en.ner.conll2003.bert data/ner/conll2003/deu.testb
