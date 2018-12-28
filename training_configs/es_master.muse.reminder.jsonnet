@@ -10,7 +10,7 @@
                 "lowercase_tokens": true
             },
         },
-        "domain_identifier" : "alarm"
+        "domain_identifier" : "reminder"
     },
     "iterator": {
         "type": "basic",
