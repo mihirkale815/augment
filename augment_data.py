@@ -30,18 +30,19 @@ def augment(instance,tgt_index):
                 new_spans.append([span_text, span_label])
     return new_spans,zero_new_spans
 
-def create_augmented_dataset(instance_iterator,index,out_path):
+def create_augmented_dataset(instance_iterator,index,out_path,K=1):
     fout = open(out_path,"w")
     for instance in instance_iterator:
-        new_spans,zero_new_spans = augment(instance,index)
-        if zero_new_spans : "damn"
-        new_span_text = " ".join([text for text, label in new_spans])
-        span_text = " ".join([text for text, label in instance.spans])
-        if len(new_spans) == 0 : continue
-        #print(span_text," ==> ",new_span_text)
-        #fout.write("\n".join(to_lines(instance.domain,instance.intent,new_spans)) + "\n\n")
-        fout.write("\n".join(instance.lines) + "\n\n")
-
+        for trial in K:
+            new_spans,zero_new_spans = augment(instance,index)
+            if zero_new_spans : "damn"
+            new_span_text = " ".join([text for text, label in new_spans])
+            span_text = " ".join([text for text, label in instance.spans])
+            if len(new_spans) == 0 : continue
+            #print(span_text," ==> ",new_span_text)
+            fout.write("\n".join(to_lines(instance.domain,instance.intent,new_spans)) + "\n\n")
+            #fout.write("\n".join(instance.lines) + "\n\n")
+    fout.close()
 
 def delexicalize(instance):
     text = []
@@ -76,7 +77,7 @@ if __name__ == '__main__':
     data_dir = "data/multilingual_task_oriented_dialog_slotfilling"
     lang = "th_clean"
     path_dict = defaultdict(dict)
-    for lang in ['en','th_clean','es']:
+    for lang in ['en','es','th']:
         path_dict[lang]['train'] = os.path.join(data_dir,lang,"train-{0}.conllu".format(lang))
         path_dict[lang]['dev'] = os.path.join(data_dir,lang,"train-{0}.conllu".format(lang))
         path_dict[lang]['test'] = os.path.join(data_dir,lang,"train-{0}.conllu".format(lang))
@@ -94,30 +95,29 @@ if __name__ == '__main__':
     b_instances = [instance for instance in igen]
     b_index = index_instances(b_instances)
 
-    out_path = os.path.join(data_dir, "en", "train.syn.en.th.conllu")
+    out_path = os.path.join(data_dir, "en", "train-en500.conllu")
+    create_subset(b_instances, out_path, 500)
+
+    '''out_path = os.path.join(data_dir, "en", "train.syn.en.th.conllu")
     create_augmented_dataset(a_instances, b_index, out_path)
 
     out_path = os.path.join(data_dir, "th_clean", "train.syn.th.en.conllu")
     create_augmented_dataset(b_instances, a_index, out_path)
 
+    out_path = os.path.join(data_dir, "th_clean", "train.syn.th.th.1.conllu")
+    create_augmented_dataset(b_instances, b_index, out_path)
+
+    out_path = os.path.join(data_dir, "th_clean", "train.syn.th.th.2.conllu")
+    create_augmented_dataset(b_instances, b_index, out_path)
+
+    out_path = os.path.join(data_dir, "th_clean", "train.syn.th.th.3.conllu")
+    create_augmented_dataset(b_instances, b_index, out_path)
+
+    out_path = os.path.join(data_dir, "th_clean", "train.syn.th.th.4.conllu")
+    create_augmented_dataset(b_instances, b_index, out_path)'''
+
+
 '''
-    out_path = os.path.join(data_dir, "en1k", "train.syn.en.en.1.conllu")
-    create_augmented_dataset(b_instances, b_index, out_path)
-
-    out_path = os.path.join(data_dir, "en1k", "train.syn.en.en.2.conllu")
-    create_augmented_dataset(b_instances, b_index, out_path)
-
-    out_path = os.path.join(data_dir, "en1k", "train.syn.en.en.3.conllu")
-    create_augmented_dataset(b_instances, b_index, out_path)
-
-    out_path = os.path.join(data_dir, "en1k", "train.syn.en.en.4.conllu")
-    create_augmented_dataset(b_instances, b_index, out_path)
-
-
-
-    #out_path = os.path.join(data_dir, "en", "train-en500.conllu")
-    #create_subset(b_instances, out_path, 500)
-
     out_path = os.path.join(data_dir, "en", "train.en.delex.conllu")
     create_delexicalized_subset(a_instances, out_path)
 
