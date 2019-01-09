@@ -29,7 +29,7 @@ lines2 = """# text: Recuérdame de escribirle un correo electrónico a mi jefe
 8	mi	reminder/set_reminder	I-reminder/todo
 9	jefe	reminder/set_reminder	I-reminder/todo"""
 
-instance = Instance.from_lines(lines.split("\n"))
+#instance = Instance.from_lines(lines.split("\n"))
 '''print(instance.text)
 print(instance.intent)
 print(instance.slot_labels)
@@ -39,8 +39,8 @@ print(instance.spans)
 '''
 
 
-lines_clone = instance.to_lines()
-instance_clone = Instance.from_lines(lines_clone.split("\n"))
+#lines_clone = instance.to_lines()
+#instance_clone = Instance.from_lines(lines_clone.split("\n"))
 
-print(instance.slot_labels)
-print(instance_clone.slot_labels)
+#print(instance.slot_labels)
+#print(instance_clone.slot_labels)
