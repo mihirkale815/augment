@@ -15,7 +15,7 @@
     },
     "iterator": {
         "type": "basic",
-        "batch_size":32
+        "batch_size":8
     },
     "validation_iterator": {
         "type": "bucket",

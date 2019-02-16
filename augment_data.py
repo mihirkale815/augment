@@ -1,4 +1,4 @@
-from augment.data.instance import Instance,instance_gen,to_lines
+from augment.data.instance import Instance,BIODataUtils
 import os
 import sys
 from collections import defaultdict
@@ -33,14 +33,14 @@ def augment(instance,tgt_index):
 def create_augmented_dataset(instance_iterator,index,out_path,K=1):
     fout = open(out_path,"w")
     for instance in instance_iterator:
-        for trial in K:
+        for trial in range(0,K):
             new_spans,zero_new_spans = augment(instance,index)
             if zero_new_spans : "damn"
             new_span_text = " ".join([text for text, label in new_spans])
             span_text = " ".join([text for text, label in instance.spans])
             if len(new_spans) == 0 : continue
             #print(span_text," ==> ",new_span_text)
-            fout.write("\n".join(to_lines(instance.domain,instance.intent,new_spans)) + "\n\n")
+            fout.write("\n".join(BIODataUtils.to_lines(instance.domain,instance.intent,new_spans)) + "\n\n")
             #fout.write("\n".join(instance.lines) + "\n\n")
     fout.close()
 
@@ -74,17 +74,18 @@ def create_subset(instance_iterator,out_path,num_samples):
 
 if __name__ == '__main__':
 
-    data_dir = "data/multilingual_task_oriented_dialog_slotfilling"
-    lang = "th_clean"
+    data_dir = "data/multilingual_atis/"
     path_dict = defaultdict(dict)
-    for lang in ['en','es','th']:
-        path_dict[lang]['train'] = os.path.join(data_dir,lang,"train-{0}.conllu".format(lang))
-        path_dict[lang]['dev'] = os.path.join(data_dir,lang,"train-{0}.conllu".format(lang))
-        path_dict[lang]['test'] = os.path.join(data_dir,lang,"train-{0}.conllu".format(lang))
+    for lang in ['en', 'hi', 'tr']:
+        path_dict[lang]['train'] = os.path.join(data_dir,lang,"train.bio")
+        path_dict[lang]['dev'] = os.path.join(data_dir,lang,"dev.bio")
+        path_dict[lang]['test'] = os.path.join(data_dir,lang,"test.bio")
 
 
     a_lang = 'en'
-    b_lang = 'th_clean'
+    b_lang = 'tr'
+
+    instance_gen = BIODataUtils.instance_gen
 
     igen = instance_gen(path_dict[a_lang]['train'])
     a_instances = [instance for instance in igen]
@@ -95,26 +96,30 @@ if __name__ == '__main__':
     b_instances = [instance for instance in igen]
     b_index = index_instances(b_instances)
 
-    out_path = os.path.join(data_dir, "en", "train-en500.conllu")
-    create_subset(b_instances, out_path, 500)
+    #out_path = os.path.join(data_dir, "en", "train-en500.conllu")
+    #create_subset(b_instances, out_path, 500)
 
-    '''out_path = os.path.join(data_dir, "en", "train.syn.en.th.conllu")
+    out_path = os.path.join(data_dir, a_lang, "train.syn.{a}.{b}.bio".format(a=a_lang,b=b_lang))
     create_augmented_dataset(a_instances, b_index, out_path)
 
-    out_path = os.path.join(data_dir, "th_clean", "train.syn.th.en.conllu")
+    out_path = os.path.join(data_dir, b_lang, "train.syn.{b}.{a}.bio".format(a=a_lang,b=b_lang))
     create_augmented_dataset(b_instances, a_index, out_path)
 
-    out_path = os.path.join(data_dir, "th_clean", "train.syn.th.th.1.conllu")
+    out_path = os.path.join(data_dir, b_lang, "train.syn.{b}.{b}.1.bio".format(b=b_lang))
     create_augmented_dataset(b_instances, b_index, out_path)
 
-    out_path = os.path.join(data_dir, "th_clean", "train.syn.th.th.2.conllu")
+    out_path = os.path.join(data_dir, b_lang, "train.syn.{b}.{b}.2.bio".format(b=b_lang))
     create_augmented_dataset(b_instances, b_index, out_path)
 
-    out_path = os.path.join(data_dir, "th_clean", "train.syn.th.th.3.conllu")
+    out_path = os.path.join(data_dir, b_lang, "train.syn.{b}.{b}.3.bio".format(b=b_lang))
     create_augmented_dataset(b_instances, b_index, out_path)
 
-    out_path = os.path.join(data_dir, "th_clean", "train.syn.th.th.4.conllu")
-    create_augmented_dataset(b_instances, b_index, out_path)'''
+    out_path = os.path.join(data_dir, b_lang, "train.syn.{b}.{b}.4.bio".format(b=b_lang))
+    create_augmented_dataset(b_instances, b_index, out_path)
+
+
+
+
 
 
 '''
