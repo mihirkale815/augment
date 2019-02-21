@@ -15,7 +15,7 @@
     },
     "iterator": {
         "type": "basic",
-        "batch_size":32
+        "batch_size":8
     },
     "validation_iterator": {
         "type": "bucket",
@@ -78,13 +78,13 @@
     "trainer": {
         "cuda_device": 0,
         "grad_norm": 5,
-        "num_epochs": 50,
+        "num_epochs": 30,
         "num_serialized_models_to_keep": 1,
         "optimizer": {
             "type": "adam",
             "lr": 0.001,
         },
-        "patience": 5,
+        "patience": 3,
         "validation_metric": "+f1-measure-overall"
     },
     "validation_dataset_reader": {
@@ -101,5 +101,5 @@
                 "pretrained_model":"bert-base-multilingual-cased",
             }
         }
-    }
-}
+    },
+"random_seed": 8, "pytorch_seed": 8, "numpy_seed": 8 }

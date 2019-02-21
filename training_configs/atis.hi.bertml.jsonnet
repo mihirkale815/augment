@@ -15,7 +15,7 @@
     },
     "iterator": {
         "type": "basic",
-        "batch_size":32
+        "batch_size":8
     },
     "validation_iterator": {
         "type": "bucket",
@@ -37,7 +37,7 @@
             "bidirectional": true,
             "dropout": 0.5,
             "hidden_size": 100,
-            "input_size": 768 + 64,
+            "input_size": 768 + 1,
             "num_layers": 1
         },
         "include_start_end_transitions": false,
@@ -51,7 +51,8 @@
             "bert" : {
                 "type": "bert-pretrained",
                 "pretrained_model":"bert-base-multilingual-cased",
-                "requires_grad":false,
+                "requires_grad":true,
+		"top_layer_only":true,
             },
             "token_characters": {
                     "type": "character_encoding",
@@ -65,7 +66,7 @@
                         "ngram_filter_sizes": [
                             3
                         ],
-                        "num_filters": 64
+                        "num_filters": 1
                     }
                 }
 
@@ -84,7 +85,7 @@
             "type": "adam",
             "lr": 0.001,
         },
-        "patience": 5,
+        "patience": 10,
         "validation_metric": "+f1-measure-overall"
     },
     "validation_dataset_reader": {
@@ -102,4 +103,5 @@
             }
         }
     }
+
 }

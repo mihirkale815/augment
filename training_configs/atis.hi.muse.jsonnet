@@ -5,17 +5,16 @@
             "token_characters": {
                 "type": "characters"
             },
-            "bert": {
-                "type":"bert-pretrained",
-                "do_lowercase": true,
-                "use_starting_offsets":true,
-                "pretrained_model":"bert-base-multilingual-cased",
-            }
-        }
+            "tokens": {
+                "type": "single_id",
+                "lowercase_tokens": true
+            },
+        },
+        
     },
     "iterator": {
         "type": "basic",
-        "batch_size":32
+        "batch_size":8
     },
     "validation_iterator": {
         "type": "bucket",
@@ -37,23 +36,21 @@
             "bidirectional": true,
             "dropout": 0.5,
             "hidden_size": 100,
-            "input_size": 768 + 64,
+            "input_size": 300 + 64 ,
             "num_layers": 1
         },
         "include_start_end_transitions": false,
         "label_encoding": "BIO",
         "text_field_embedder": {
-            "embedder_to_indexer_map": {
-                "token_characters": ["token_characters"],  // etc
-                "bert": ["bert", "bert-offsets"]
-            },
-            "allow_unmatched_keys" : true,
-            "bert" : {
-                "type": "bert-pretrained",
-                "pretrained_model":"bert-base-multilingual-cased",
-                "requires_grad":false,
-            },
-            "token_characters": {
+            "type": "basic",
+            "token_embedders": {
+                "tokens": {
+                    "type": "embedding",
+                    "embedding_dim": 300,
+                    "pretrained_file":  "/home/mihirkale815/projects/fasttext/muse/wiki.multi.en_hi.vec",
+                    "trainable": false
+                },
+                "token_characters": {
                     "type": "character_encoding",
                     "embedding": {
                         "embedding_dim": 16
@@ -68,9 +65,9 @@
                         "num_filters": 64
                     }
                 }
-
             }
-        },
+        }
+    },
     "train_data_path": std.extVar('TRAIN_DATA_PATH'),
     "validation_data_path": std.extVar('DEV_DATA_PATH'),
     "test_data_path": std.extVar('TEST_DATA_PATH'),
@@ -82,24 +79,9 @@
         "num_serialized_models_to_keep": 1,
         "optimizer": {
             "type": "adam",
-            "lr": 0.001,
+            "lr": 0.001
         },
         "patience": 5,
         "validation_metric": "+f1-measure-overall"
     },
-    "validation_dataset_reader": {
-        "type": "bio",
-        "coding_scheme": "BIO",
-        "token_indexers": {
-            "token_characters": {
-                "type": "characters"
-            },
-            "bert": {
-                "type":"bert-pretrained",
-                "do_lowercase": true,
-                "use_starting_offsets":true,
-                "pretrained_model":"bert-base-multilingual-cased",
-            }
-        }
-    }
-}
+"random_seed": 4, "pytorch_seed": 4, "numpy_seed": 4 }

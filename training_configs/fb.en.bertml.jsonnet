@@ -1,6 +1,6 @@
 {
     "dataset_reader": {
-        "type": "bio",
+        "type": "fb_xling",
         "token_indexers": {
             "token_characters": {
                 "type": "characters"
@@ -78,17 +78,17 @@
     "trainer": {
         "cuda_device": 0,
         "grad_norm": 5,
-        "num_epochs": 50,
+        "num_epochs": 30,
         "num_serialized_models_to_keep": 1,
         "optimizer": {
             "type": "adam",
             "lr": 0.001,
         },
-        "patience": 5,
+        "patience": 3,
         "validation_metric": "+f1-measure-overall"
     },
     "validation_dataset_reader": {
-        "type": "bio",
+        "type": "fb_xling",
         "coding_scheme": "BIO",
         "token_indexers": {
             "token_characters": {
@@ -101,5 +101,5 @@
                 "pretrained_model":"bert-base-multilingual-cased",
             }
         }
-    }
-}
+    },
+"random_seed": 5, "pytorch_seed": 5, "numpy_seed": 5 }
